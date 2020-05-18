@@ -234,7 +234,6 @@ public class app {
         return "no";
     }
 
-<<<<<<< HEAD
 	
 	/**
      * function to check if a specific user is in the system or not
@@ -392,7 +391,249 @@ public class app {
         }
         return Global.allPlayground.get(ind);
     }
+    
+    private void printMonths() {
+        String months[] = {"jan", "feb", "mar", "apr", "may", "jun"
+                , "jul", "aug", "sep", "oct", "nov", "dec"};
+        for (int i = 0; i < 12; i++)
+            System.out.print(months[i] + " ");
+        System.out.println(" ");
+    }
 
-=======
->>>>>>> e8bf3876b791f6d982cd4371c92aab84d899e219
+    /**
+     * function to check if date in right format or not
+     * @param s date
+     * @return boolean
+     */
+    private boolean checkDate(final String s) {
+        if (s.length() < 11)
+            return false;
+        String months[] = {"jan", "feb", "mar", "apr", "may", "jun"
+                , "jul", "aug", "sep", "oct", "nov", "dec"};
+        String temp = s.substring(0, 3);
+        temp = temp.toLowerCase();
+        boolean flag = false;
+        for (int i = 0; i < 12; i++) {
+            if (temp.equals(months[i])) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag)
+            return false;
+        temp = s.substring(3, 5);
+        int num = 0;
+        try {
+            num = Integer.parseInt(temp);
+        } catch (NumberFormatException object) {
+            return false;
+        }
+        if (num < 1 || num > 30)
+            return false;
+        temp = s.substring(5, 7);
+        num = 0;
+        try {
+            num = Integer.parseInt(temp);
+        } catch (NumberFormatException object) {
+            return false;
+        }
+        if (num < 0 || num > 23)
+            return false;
+        char temp2;
+        temp2 = s.charAt(7);
+        if (temp2 - ':' != 0)
+            return false;
+        temp = s.substring(8, 10);
+        try {
+            num = Integer.parseInt(temp);
+        } catch (NumberFormatException object) {
+            return false;
+        }
+        if (num < 0 || num > 59)
+            return false;
+        temp = s.substring(10, s.length());
+        try {
+            num = Integer.parseInt(temp);
+        } catch (NumberFormatException object) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * function to input date
+     * @return String
+     */
+    private String inputDate() {
+        Scanner input = new Scanner(System.in);
+        printMonths();
+        System.out.print("Enter a month from months which been mentioned above: ");
+        String mon = input.next();
+        System.out.print("Enter a day from 1 to 30: ");
+        String day = input.next();
+        while (!checkNum(day)) {
+            System.out.print("Enter a valid day: ");
+            day = input.next();
+        }
+        if (day.length() == 1)
+            day = "0" + day;
+        System.out.println("Time:");
+        System.out.print("Enter an hour from 00 to 23: ");
+        String hour = input.next();
+        while (!checkNum(hour)) {
+            System.out.print("Enter a valid day: ");
+            hour = input.next();
+        }
+        if (hour.length() == 1)
+            hour = "0" + hour;
+        System.out.print("Enter a minute from 00 to 59: ");
+        String min = input.next();
+        while (!checkNum(min)) {
+            System.out.print("Enter a valid minute: ");
+            min = input.next();
+        }
+        if (min.length() == 1)
+            min = "0" + min;
+        System.out.print("Enter the period of playing: ");
+        String period = input.next();
+        String Date = mon + day + hour + ":" + min + period;
+        if (!checkDate(Date))
+            return "no";
+        return Date;
+    }
+
+    /**
+     * send invitation to specific player's team
+     * @param p the player
+     */
+    private void sendInvitation(player p) {
+        if (p.getTeam().getSize() > 0)
+            p.sendInvitation();
+        else
+            System.out.println("There is no players in your team.");
+        bookPlayground(p);
+    }
+
+    /**
+     * function to make a specific player to book a playground
+     * @param pp the player
+     */
+    private void bookPlayground(player pp) {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("1- Book playground.");
+        System.out.println("2- Exit.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(2, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if (choice.equals("1")) {
+            System.out.print("Name: ");
+            String name = input.next();
+            while (!checkAlpha(name)) {
+                System.out.print("Please enter a valid name: ");
+                name = input.next();
+            }
+            if (!ifExistPlayground(name)) {
+                System.out.println("There is no playground with that name.");
+                bookPlayground(pp);
+            }
+            playground p = searchPlayground(name);
+            if (!p.getStatus()) {
+                System.out.println("This playground didn't approved by administrator.");
+                bookPlayground(pp);
+            }
+            String date = inputDate();
+            if (date.equals("no")) {
+                System.out.println("Format of date which you input is wrong.");
+                bookPlayground(pp);
+            } else {
+                if (!p.book(date)) {
+                    System.out.println("This time will be not available in this playground.");
+                    bookPlayground(pp);
+                } else if (!p.getStatus()) {
+                    System.out.println("This playground didn't approved by administrator.");
+                    bookPlayground(pp);
+                } else {
+                    System.out.println("Your booking is completed successfully.");
+                    System.out.println("Do you want to send invitation to your team? (yes/no)");
+                    String c = input.next();
+                    while (!c.equals("yes") && !c.equals("no")) {
+                        System.out.print("Please enter a valid answer: ");
+                        c = input.next();
+                    }
+                    if (c.equals("yes"))
+                        sendInvitation(pp);
+                    bookPlayground(pp);
+                }
+            }
+        }
+        playerMenu(pp);
+    }
+
+    /**
+     * function to make a specific player to add another player in his team
+     * @param p the player who wants to add another in his team
+     */
+    private void addPlayersInTeam(player p) {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("1- add player.");
+        System.out.println("2- Exit.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(2, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if (choice.equals("1")) {
+            System.out.print("Enter Email of the player you want to add: ");
+            String id, temp;
+            Scanner in = new Scanner(System.in);
+            temp = in.next();
+            id = temp;
+            if (!p.ifInTeam(id)) {
+                System.out.println("This player is added successfully in your team");
+                p.addplayer(id);
+            } else
+                System.out.println("The player is already in the team");
+            addPlayersInTeam(p);
+        }
+        playerMenu(p);
+    }
+
+    /**
+     * display player menu
+     * @param p the player
+     */
+    private void playerMenu(player p) {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("\t\t\t\t\tHELLO " + p.getName());
+        System.out.println("1- Viewing playgrounds.");
+        System.out.println("2- Booking playgrounds.");
+        System.out.println("3- Adding players in your team.");
+        System.out.println("4- Log out.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(4, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if (choice.equals("1"))
+            viewPlaygrounds(p);
+        else if (choice.equals("2"))
+            bookPlayground(p);
+        else if (choice.equals("3"))
+            addPlayersInTeam(p);
+        else
+            mainMenu();
+    }
+
+
 };
