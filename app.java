@@ -234,6 +234,7 @@ public class app {
         return "no";
     }
 
+<<<<<<< HEAD
 	
 	/**
      * function to check if a specific user is in the system or not
@@ -392,4 +393,6 @@ public class app {
         return Global.allPlayground.get(ind);
     }
 
+=======
+>>>>>>> e8bf3876b791f6d982cd4371c92aab84d899e219
 };
