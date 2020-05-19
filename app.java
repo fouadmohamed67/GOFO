@@ -7,7 +7,7 @@ import java.util.Scanner;
  * @author Osama Salah Abdelmoniem 20180039
  * @author Marwan Galal Mohamed 20180268
  * @author fouad mohamed fouad    20180198
- * @author Abdelrahman Ammar Abbas    20180146
+ * @autthor Abdelrahman Ammar Abbas    20180146
  */
 public class app {
     private final List<player> allPlayers = new ArrayList<>();
@@ -234,8 +234,7 @@ public class app {
         return "no";
     }
 
-	
-	/**
+    /**
      * function to check if a specific user is in the system or not
      * @param id id of that user
      * @return string
@@ -391,7 +390,10 @@ public class app {
         }
         return Global.allPlayground.get(ind);
     }
-    
+
+    /**
+     * function to print months
+     */
     private void printMonths() {
         String months[] = {"jan", "feb", "mar", "apr", "may", "jun"
                 , "jul", "aug", "sep", "oct", "nov", "dec"};
@@ -635,5 +637,258 @@ public class app {
             mainMenu();
     }
 
+    /**
+     * function to make specific owner to register his playground in the system
+     * @param o the owner
+     */
+    private void registerPlayground(owner o) {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("1- Register playground.");
+        System.out.println("2- Exit.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(2, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if (choice.equals("1")) {
+            String name, size, location, avHours, pricePerHour, cancelPeriod;
+            System.out.print("Name: ");
+            name = input.next();
+            while (!checkAlpha(name)) {
+                System.out.print("Please enter valid name: ");
+                name = input.next();
+            }
+            while (ifExistPlayground(name)) {
+                System.out.print("This name is already used, please enter another name: ");
+                System.out.print("Name: ");
+                name = input.next();
+                while (!checkAlpha(name)) {
+                    System.out.print("Please enter valid name: ");
+                    name = input.next();
+                }
+            }
+            System.out.print("size: ");
+            size = input.next();
+            while (!checkNum(size)) {
+                System.out.print("Please enter valid size: ");
+                size = input.next();
+            }
+            System.out.print("location: ");
+            location = input.next();
+            while (!checkAlpha(location)) {
+                System.out.print("Please enter valid location: ");
+                location = input.next();
+            }
+            location = location.toLowerCase();
+            System.out.print("Available hours: ");
+            avHours = input.next();
+            while (!checkNum(avHours)) {
+                System.out.print("Please enter valid Available hours: ");
+                avHours = input.next();
+            }
+            System.out.print("Price per hour: ");
+            pricePerHour = input.next();
+            while (!checkNum(pricePerHour)) {
+                System.out.print("Please enter valid Price per hour: ");
+                pricePerHour = input.next();
+            }
+            System.out.print("Cancellation period: ");
+            cancelPeriod = input.next();
+            while (!checkNum(cancelPeriod)) {
+                System.out.print("Please enter valid Cancellation period: ");
+                cancelPeriod = input.next();
+            }
+            playground p = new playground(name, size, location, avHours, pricePerHour, cancelPeriod);
+            System.out.println("Your request was sent to administrator, " +
+                    "if information of your playground is valid, he will approve it.");
+            Global.administrator.sendRequest(Global.allPlayground.size());
+            Global.allPlayground.add(p);
+            o.setPlayground(p);
+            registerPlayground(o);
+        } else
+            ownerMenu(o);
+    }
 
-};
+    /**
+     * function to make an owner to change available hours of his playground
+     * @param o the owner
+     */
+    private void changeAvHours(owner o) {
+        System.out.println("----------------------------------------------------------------------------------");
+        if (!o.ifHave()) {
+            System.out.println("You have not playground in the system.");
+            ownerMenu(o);
+        }
+        Scanner input = new Scanner(System.in);
+        String avHours;
+        System.out.print("Available hours: ");
+        avHours = input.next();
+        while (!checkNum(avHours)) {
+            System.out.print("Please enter valid Available hours: ");
+            avHours = input.next();
+        }
+        o.getPlayground().setAvHours(avHours);
+        ownerMenu(o);
+    }
+
+    /**
+     * function to make an owner to change price per hour of his playground
+     * @param o
+     */
+    private void changePPHour(owner o) {
+        System.out.println("----------------------------------------------------------------------------------");
+        if (!o.ifHave()) {
+            System.out.println("You have not playground in the system.");
+            ownerMenu(o);
+        }
+        Scanner input = new Scanner(System.in);
+        String pricePerHour;
+        System.out.print("Price per hour: ");
+        pricePerHour = input.next();
+        while (!checkNum(pricePerHour)) {
+            System.out.print("Please enter valid Price per hour: ");
+            pricePerHour = input.next();
+        }
+        o.getPlayground().setPricePerHour(pricePerHour);
+        ownerMenu(o);
+    }
+
+    /**
+     * display owner menu
+     * @param o the owner
+     */
+    private void ownerMenu(owner o) {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("\t\t\t\t\tHELLO " + o.getName());
+        System.out.println("1- Registering your playground.");
+        System.out.println("2- Changing available hours of your playground.");
+        System.out.println("3- Changing price per hour of your playground.");
+        System.out.println("4- Log out.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(4, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if (choice.equals("1"))
+            registerPlayground(o);
+        else if (choice.equals("2"))
+            changeAvHours(o);
+        else if (choice.equals("3"))
+            changePPHour(o);
+        else
+            mainMenu();
+    }
+
+    /**
+     * function to display main menu of the application
+     */
+    public void mainMenu() {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("\t\t\t\t\tHELLO USER");
+        System.out.println("1- Sign in as administrator.");
+        System.out.println("2- Sign up.");
+        System.out.println("3- Sign in as user.");
+        System.out.println("4- exit.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(4, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if (choice.equals("1"))
+            adminMenu();
+        else if (choice.equals("2"))
+            signUp();
+        else if (choice.equals("3"))
+            signIn();
+        else
+            return;
+    }
+
+    /**
+     * function to make a user to sign up
+     */
+    private void signUp() {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("1- Sign up.");
+        System.out.println("2- exit.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(2, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if(choice.equals("1")){
+            System.out.print("Role (owner/player): ");
+            String role = "";
+            role = input.next();
+            role = role.toLowerCase();
+            while (!role.equals("owner") && !role.equals("player")) {
+                System.out.print("Please enter a valid role: ");
+                role = input.next();
+                role = role.toLowerCase();
+            }
+            if (role.equals("owner"))
+                signUpOwner();
+            else
+                signUpPlayer();
+            signUp();
+        }
+        else
+            mainMenu();
+    }
+
+    /**
+     * function to make a user to sign in
+     */
+    private void signIn() {
+        System.out.println("----------------------------------------------------------------------------------");
+        System.out.println("1- Sign in.");
+        System.out.println("2- exit.");
+        String choice = "1";
+        System.out.print("Your choice: ");
+        Scanner input = new Scanner(System.in);
+        choice = input.next();
+        while (checkIfValid(2, choice)) {
+            System.out.println("Please enter valid choice: ");
+            choice = input.next();
+        }
+        if(choice.equals("1")){
+            System.out.print("ID: ");
+            String id = "";
+            id = input.next();
+            while (!checkNum(id)) {
+                System.out.print("Please enter a valid ID: ");
+                id = input.next();
+            }
+            System.out.print("Password: ");
+            String pass = "";
+            pass = input.next();
+            if (ifExistUser(Integer.parseInt(id)).equals("no")) {
+                System.out.println("ID or password or both are invalid.");
+                signIn();
+            } else if (ifExistUser(Integer.parseInt(id)).equals("player")) {
+                if (searchPlayer(Integer.parseInt(id), pass))
+                    playerMenu(getPlayer(Integer.parseInt(id)));
+            } else {
+                if (searchOwner(Integer.parseInt(id), pass))
+                    ownerMenu(getOwner(Integer.parseInt(id)));
+            }
+            System.out.println("Password is invalid.");
+            signIn();
+        }
+        else
+            mainMenu();
+    }
+
+}
