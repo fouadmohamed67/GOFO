@@ -4,10 +4,11 @@ import java.util.Scanner;
 
 /**
  * class app
+ *
  * @author Osama Salah Abdelmoniem 20180039
  * @author Marwan Galal Mohamed 20180268
  * @author fouad mohamed fouad    20180198
- * @autthor Abdelrahman Ammar Abbas    20180146
+ * @author Abdelrahman Ammar Abbas    20180146
  */
 public class app {
     private final List<player> allPlayers = new ArrayList<>();
@@ -15,6 +16,7 @@ public class app {
 
     /**
      * utility function to check if th string has alphabetic only or not
+     *
      * @param s string
      * @return boolean
      */
@@ -29,6 +31,7 @@ public class app {
 
     /**
      * utility function to check if the string has numbers only or not
+     *
      * @param s string
      * @return boolean
      */
@@ -43,6 +46,7 @@ public class app {
 
     /**
      * utility function to check if the input in a range from 1 to y or not
+     *
      * @param y upper bound
      * @param c string
      * @return boolean
@@ -140,15 +144,10 @@ public class app {
             s2 = input.next();
         }
         p.setPass(s);
-        System.out.println("This is registration code and ID: " + p.getId());
-        System.out.print("enter your registration code to confirm your account: ");
+        System.out.println("This is your ID: " + p.getId());
+        System.out.print("We send a registration code to your mail, enter your registration code to confirm your account: ");
         s = input.next();
-        int num = Integer.parseInt(s);
-        while (num != p.getId()) {
-            System.out.print("Please enter a valid registration code: ");
-            s = input.next();
-            num = Integer.parseInt(s);
-        }
+        System.out.println("Congratulations! you registered your account successfully.");
         allOwners.add(p);
 
     }
@@ -210,6 +209,7 @@ public class app {
 
     /**
      * function to check if a specific owner is in the system or not
+     *
      * @param id id of that owner
      * @return string
      */
@@ -223,6 +223,7 @@ public class app {
 
     /**
      * function to check if a specific player is in the system or not
+     *
      * @param id id of that player
      * @return string
      */
@@ -236,6 +237,7 @@ public class app {
 
     /**
      * function to check if a specific user is in the system or not
+     *
      * @param id id of that user
      * @return string
      */
@@ -248,8 +250,9 @@ public class app {
     /**
      * function to check if there is player with specific id and password in the system
      * or not
-     * @param id    id of the player
-     * @param pass  password of the player
+     *
+     * @param id   id of the player
+     * @param pass password of the player
      * @return boolean
      */
     private boolean searchPlayer(final int id, final String pass) {
@@ -264,7 +267,8 @@ public class app {
 
     /**
      * function to get a player with specific id
-     * @param id    if of that player
+     *
+     * @param id if of that player
      * @return player
      */
     private player getPlayer(final int id) {
@@ -281,8 +285,9 @@ public class app {
     /**
      * function to check if there is owner with specific id and password in the system
      * or not
-     * @param id    id of the owner
-     * @param pass  password of the owner
+     *
+     * @param id   id of the owner
+     * @param pass password of the owner
      * @return boolean
      */
     private boolean searchOwner(final int id, final String pass) {
@@ -297,7 +302,8 @@ public class app {
 
     /**
      * function to get a owner with specific id
-     * @param id    if of that owner
+     *
+     * @param id if of that owner
      * @return owner
      */
     private owner getOwner(final int id) {
@@ -313,6 +319,7 @@ public class app {
 
     /**
      * function to display all playgrounds in the system
+     *
      * @param p the player who wants to that
      */
     private void viewPlaygrounds(player p) {
@@ -364,6 +371,7 @@ public class app {
 
     /**
      * function to check if a playground with a specific name is un system or not
+     *
      * @param name name of playground
      * @return boolean
      */
@@ -377,8 +385,9 @@ public class app {
 
     /**
      * function to get playground with specific name
+     *
      * @param name name of playground
-     * @return  playground
+     * @return playground
      */
     private playground searchPlayground(final String name) {
         int ind = 0;
@@ -404,6 +413,7 @@ public class app {
 
     /**
      * function to check if date in right format or not
+     *
      * @param s date
      * @return boolean
      */
@@ -464,6 +474,7 @@ public class app {
 
     /**
      * function to input date
+     *
      * @return String
      */
     private String inputDate() {
@@ -506,6 +517,7 @@ public class app {
 
     /**
      * send invitation to specific player's team
+     *
      * @param p the player
      */
     private void sendInvitation(player p) {
@@ -560,9 +572,11 @@ public class app {
                     System.out.println("This playground didn't approved by administrator.");
                     bookPlayground(pp);
                 } else {
+                    System.out.print("Enter your eWallet ID to pay price of your booking: ");
+                    String c = input.next();
                     System.out.println("Your booking is completed successfully.");
                     System.out.println("Do you want to send invitation to your team? (yes/no)");
-                    String c = input.next();
+                    c = input.next();
                     while (!c.equals("yes") && !c.equals("no")) {
                         System.out.print("Please enter a valid answer: ");
                         c = input.next();
@@ -574,6 +588,29 @@ public class app {
             }
         }
         playerMenu(pp);
+    }
+
+    /**
+     * function to check if mail of player is in right format or not
+     * @param s mail of player
+     * @return boolean
+     */
+    boolean checkMail(final String s) {
+        int dot = 0, symb = 0 , under=0;
+        for (int i = 0; i < s.length(); i++) {
+            if(s.charAt(i) == '.')
+                dot++;
+            else if(s.charAt(i) == '@')
+                symb++;
+            else if(s.charAt(i) == '_')
+                under++;
+            else if((s.charAt(i) < 'a' || s.charAt(i) > 'z') && ((s.charAt(i) < 'A' || s.charAt(i) > 'Z')))
+                return false;
+        }
+        if(under<=1 && (dot==1 || dot==2) && symb==1)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -598,12 +635,19 @@ public class app {
             Scanner in = new Scanner(System.in);
             temp = in.next();
             id = temp;
-            if (!p.ifInTeam(id)) {
-                System.out.println("This player is added successfully in your team");
-                p.addplayer(id);
-            } else
-                System.out.println("The player is already in the team");
-            addPlayersInTeam(p);
+            if(checkMail(id)){
+                if (!p.ifInTeam(id)) {
+                    System.out.println("This player is added successfully in your team");
+                    p.addplayer(id);
+                } else
+                    System.out.println("The player is already in the team");
+                addPlayersInTeam(p);
+            }
+            else{
+                System.out.println("Email is not valid");
+                addPlayersInTeam(p);
+            }
+
         }
         playerMenu(p);
     }
@@ -639,6 +683,7 @@ public class app {
 
     /**
      * function to make specific owner to register his playground in the system
+     *
      * @param o the owner
      */
     private void registerPlayground(owner o) {
@@ -714,6 +759,7 @@ public class app {
 
     /**
      * function to make an owner to change available hours of his playground
+     *
      * @param o the owner
      */
     private void changeAvHours(owner o) {
@@ -736,6 +782,7 @@ public class app {
 
     /**
      * function to make an owner to change price per hour of his playground
+     *
      * @param o
      */
     private void changePPHour(owner o) {
@@ -758,6 +805,7 @@ public class app {
 
     /**
      * display owner menu
+     *
      * @param o the owner
      */
     private void ownerMenu(owner o) {
@@ -828,7 +876,7 @@ public class app {
             System.out.println("Please enter valid choice: ");
             choice = input.next();
         }
-        if(choice.equals("1")){
+        if (choice.equals("1")) {
             System.out.print("Role (owner/player): ");
             String role = "";
             role = input.next();
@@ -843,8 +891,7 @@ public class app {
             else
                 signUpPlayer();
             signUp();
-        }
-        else
+        } else
             mainMenu();
     }
 
@@ -863,7 +910,7 @@ public class app {
             System.out.println("Please enter valid choice: ");
             choice = input.next();
         }
-        if(choice.equals("1")){
+        if (choice.equals("1")) {
             System.out.print("ID: ");
             String id = "";
             id = input.next();
@@ -886,9 +933,9 @@ public class app {
             }
             System.out.println("Password is invalid.");
             signIn();
-        }
-        else
+        } else
             mainMenu();
     }
+
 
 }
