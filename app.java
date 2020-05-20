@@ -119,6 +119,10 @@ public class app {
         p.setName(s);
         System.out.print("Mail: ");
         s = input.next();
+        while (!checkMail(s)) {
+            System.out.print("Please enter a valid mail: ");
+            s = input.next();
+        }
         p.setMail(s);
         System.out.print("Location: ");
         s = input.next();
@@ -169,6 +173,10 @@ public class app {
         p.setName(s);
         System.out.print("Mail: ");
         s = input.next();
+        while (!checkMail(s)){
+            System.out.print("Please enter a valid mail: ");
+            s = input.next();
+        }
         p.setMail(s);
         System.out.print("Location: ");
         s = input.next();
@@ -195,14 +203,9 @@ public class app {
         }
         p.setPass(s);
         System.out.println("This is registration code and ID: " + p.getId());
-        System.out.print("enter your registration code to confirm your account: ");
+        System.out.print("We send a registration code to your mail, enter your registration code to confirm your account: ");
         s = input.next();
-        int num = Integer.parseInt(s);
-        while (num != p.getId()) {
-            System.out.print("Please enter a valid registration code: ");
-            s = input.next();
-            num = Integer.parseInt(s);
-        }
+        System.out.println("Congratulations! you registered your account successfully.");
         allPlayers.add(p);
 
     }
@@ -598,13 +601,16 @@ public class app {
     boolean checkMail(final String s) {
         int dot = 0, symb = 0 , under=0;
         for (int i = 0; i < s.length(); i++) {
+            String c ="";
+            c+=s.charAt(i);
+            c+=s.charAt(i);
             if(s.charAt(i) == '.')
                 dot++;
             else if(s.charAt(i) == '@')
                 symb++;
             else if(s.charAt(i) == '_')
                 under++;
-            else if((s.charAt(i) < 'a' || s.charAt(i) > 'z') && ((s.charAt(i) < 'A' || s.charAt(i) > 'Z')))
+            else if(!checkAlpha(c) && !checkNum(c))
                 return false;
         }
         if(under<=1 && (dot==1 || dot==2) && symb==1)
@@ -857,8 +863,6 @@ public class app {
             signUp();
         else if (choice.equals("3"))
             signIn();
-        else
-            return;
     }
 
     /**
